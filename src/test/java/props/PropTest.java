@@ -66,12 +66,24 @@ public class PropTest
         Assert.assertEquals( "Wrong notification count", "Grand Lord Hellbringer", name.previous() );
         Assert.assertEquals( "Wrong notification count", "Master of the Creeping Darkness", name.current() );
         
+        thomas.name.removeListener( name );
+        thomas.name.set( "You should not see a notification in the listener" );
+        Assert.assertEquals( "Wrong notification count", 2, name.count() );
+        Assert.assertEquals( "Wrong notification count", "Grand Lord Hellbringer", name.previous() );
+        Assert.assertEquals( "Wrong notification count", "Master of the Creeping Darkness", name.current() );
+        
         thomas.age.set( 437 );
         Assert.assertEquals( "Wrong notification count", 1, age.count() );
         Assert.assertEquals( "Wrong notification count", 36, age.previous() );
         Assert.assertEquals( "Wrong notification count", 437, age.current() );
         
         thomas.age.set( 12 );
+        Assert.assertEquals( "Wrong notification count", 2, age.count() );
+        Assert.assertEquals( "Wrong notification count", 437, age.previous() );
+        Assert.assertEquals( "Wrong notification count", 12, age.current() );
+        
+        thomas.age.removeListeners();
+        thomas.age.set( 632 );
         Assert.assertEquals( "Wrong notification count", 2, age.count() );
         Assert.assertEquals( "Wrong notification count", 437, age.previous() );
         Assert.assertEquals( "Wrong notification count", 12, age.current() );

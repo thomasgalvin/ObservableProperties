@@ -45,7 +45,7 @@ you're using normal fields with getters and setters, such as:
 
 1.  **Modified by** - `pojo.name.modifiedBy()` returns a String that can be 
     used as a user's unique identifier, fingering the individual responsible
-    for making this change.
+    for setting the current value of this property.
 
 1.  **Modification timestamp** - `pojo.name.timestamp()` returns a long 
     representing the Unix time that this property was last modified.
