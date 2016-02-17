@@ -29,7 +29,7 @@ public class Prop<T>
     
     /**
      * Creates a new Prop with an initial value, no parent, and record changes enabled.
-     * @param value the initial value
+     * @param value the initial value. If this is null, set() will return false
      */
     public Prop(T value){
         this( null, value );
@@ -38,7 +38,7 @@ public class Prop<T>
     /**
      * Creates a new Prop with a parent, an initial value, and record changes enabled.
      * @param parent the parent object
-     * @param value the initial value
+     * @param value the initial value. If this is null, set() will return false
      */
     public Prop(Object parent, T value){
         this( parent, value, true );
@@ -47,7 +47,8 @@ public class Prop<T>
     /**
      * Constructs a new Prop instance.
      * @param parent the parent object of this property.
-     * @param value the initial value of the property.
+     * @param value the initial value of the property. If this is null, set() 
+     *              will return false
      * @param recordChanges if true, this property will make a historical
      *                      record of modifications, including values,
      *                      the user making the change, and the timestamp.
@@ -59,7 +60,8 @@ public class Prop<T>
     /**
      * Constructs a new Prop instance.
      * @param parent the parent object of this property.
-     * @param value the initial value of the property.
+     * @param value the initial value of the property. If this is null, set() 
+     *              will return false
      * @param recordChanges if true, this property will make a historical
      *                      record of modifications, including values,
      *                      the user making the change, and the timestamp.
