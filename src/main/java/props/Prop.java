@@ -77,7 +77,7 @@ public class Prop<T>
     private long timestamp;
     private String modifiedBy;
     
-    private boolean recordChanges;
+    private final boolean recordChanges;
     private List<Version<T>> versions;
     
     private transient List<PropListener> changeListeners;
@@ -280,11 +280,7 @@ public class Prop<T>
     public List<Version<T>> versions(){
         if( recordChanges ){
             List<Version<T>> result = new ArrayList();
-            
-            if( versions != null && ! versions.isEmpty() ){
-                result.addAll( versions );
-            }
-            
+            result.addAll( versions );
             return result;
         }
         else{

@@ -11,6 +11,8 @@ public class PropTest
     @Test
     public void testGettersAndSetters() throws Exception{
         Pojo thomas = new Pojo();
+        Assert.assertNotNull( "UUID was null", thomas.name.uuid() );
+        Assert.assertEquals( "Parent was wrong", thomas, thomas.name.parent() );
         Assert.assertFalse( "Property should not be set", thomas.name.set() );
         Assert.assertFalse( "Property should not be set", thomas.age.set() );
         
@@ -105,6 +107,10 @@ public class PropTest
         Assert.assertEquals( "Wrong version value", "Grand Lord Hellbringer", names.get(1).value() );
         Assert.assertEquals( "Wrong version value", "Master of the Creeping Darkness", names.get(2).value() );
         
+        for( Version<String> name : names ){
+            Assert.assertNotNull( "Versions toString was null", name.toString() );
+        }
+        
         thomas.age.set( 437 );
         thomas.age.set( 12 );
         thomas.age.set( -1 );
@@ -122,7 +128,10 @@ public class PropTest
     @Test
     public void testEnhanedVersioning() throws Exception {
         Pojo thomas = new Pojo( "Thomas", 36 );
-
+        List<Version<String>> names = thomas.name.versions();
+        Assert.assertNotNull( "Versions were null", names );
+        Assert.assertEquals( "Wrong version count", 0, names.size() );
+        
         String user1 = UUID.randomUUID().toString();
         long date1 = new DateTime( 2016,1,1,0,0,0 ).getMillis();
         thomas.name.set( "Grand Lord Hellbringer", user1, date1 );
@@ -135,7 +144,7 @@ public class PropTest
         long date3 = new DateTime( 2016,1,1,0,0,0 ).getMillis();
         thomas.name.set( "Fell Marshall of the Undying Hordes", user3, date3 );
         
-        List<Version<String>> names = thomas.name.versions();
+        names = thomas.name.versions();
         Assert.assertNotNull( "Versions were null", names );
         Assert.assertEquals( "Wrong version count", 3, names.size() );
         
@@ -151,5 +160,142 @@ public class PropTest
         //the constructor)
         Assert.assertEquals( "Wrong timestamp", date1, names.get(1).timestamp() );
         Assert.assertEquals( "Wrong timestamp", date2, names.get(2).timestamp() );
+        
+        for( Version<String> name : names ){
+            Assert.assertNotNull( "Versions toString was null", name.toString() );
+        }
+    }
+    
+    @Test
+    public void testNoVersioning() throws Exception {
+        Pojo thomas = new Pojo( "Thomas", 36, false );
+        
+        thomas.name.set( "Grand Lord Hellbringer" );
+        thomas.name.set( "Master of the Creeping Darkness" );
+        thomas.name.set( "Fell Marshall of the Undying Hordes" );
+        
+        List<Version<String>> names = thomas.name.versions();
+        Assert.assertNull( "Versions should be null", names );
+        
+        thomas.age.set( 437 );
+        thomas.age.set( 12 );
+        thomas.age.set( -1 );
+        
+        List<Version<Integer>> ages = thomas.age.versions();
+        
+        Assert.assertNull( "Versions should be null", ages );
+    }
+    
+    @Test
+    public void testConstructors() throws Exception {
+        Prop<String> prop = new Prop();
+        
+        String user1 = UUID.randomUUID().toString();
+        long date1 = new DateTime( 2016,1,1,0,0,0 ).getMillis();
+        prop.set( "Grand Lord Hellbringer", user1, date1 );
+        
+        String user2 = UUID.randomUUID().toString();
+        long date2 = new DateTime( 2016,1,1,0,0,0 ).getMillis();
+        prop.set( "Master of the Creeping Darkness", user2, date2 );
+        
+        String user3 = UUID.randomUUID().toString();
+        long date3 = new DateTime( 2016,1,1,0,0,0 ).getMillis();
+        prop.set( "Fell Marshall of the Undying Hordes", user3, date3 );
+        
+        List<Version<String>> names = prop.versions();
+        Assert.assertNotNull( "Versions were null", names );
+        Assert.assertEquals( "Wrong version count", 2, names.size() );
+        
+        Assert.assertEquals( "Wrong version value", "Grand Lord Hellbringer", names.get(0).value() );
+        Assert.assertEquals( "Wrong version value", "Master of the Creeping Darkness", names.get(1).value() );
+        
+        Assert.assertEquals( "Wrong user id", user1, names.get(0).modifiedBy() );
+        Assert.assertEquals( "Wrong user id", user2, names.get(1).modifiedBy() );
+
+        Assert.assertEquals( "Wrong timestamp", date1, names.get(0).timestamp() );
+        Assert.assertEquals( "Wrong timestamp", date2, names.get(1).timestamp() );
+        
+        for( Version<String> name : names ){
+            Assert.assertNotNull( "Versions toString was null", name.toString() );
+        }
+        
+        
+        
+        
+        
+        
+        
+        prop = new Prop( null, null, true, -1, null );
+        
+        prop.set( "Grand Lord Hellbringer", user1, date1 );
+        prop.set( "Master of the Creeping Darkness", user2, date2 );
+        prop.set( "Fell Marshall of the Undying Hordes", user3, date3 );
+        
+        names = prop.versions();
+        Assert.assertNotNull( "Versions were null", names );
+        Assert.assertEquals( "Wrong version count", 2, names.size() );
+        
+        Assert.assertEquals( "Wrong version value", "Grand Lord Hellbringer", names.get(0).value() );
+        Assert.assertEquals( "Wrong version value", "Master of the Creeping Darkness", names.get(1).value() );
+        
+        Assert.assertEquals( "Wrong user id", user1, names.get(0).modifiedBy() );
+        Assert.assertEquals( "Wrong user id", user2, names.get(1).modifiedBy() );
+
+        Assert.assertEquals( "Wrong timestamp", date1, names.get(0).timestamp() );
+        Assert.assertEquals( "Wrong timestamp", date2, names.get(1).timestamp() );
+        
+        for( Version<String> name : names ){
+            Assert.assertNotNull( "Versions toString was null", name.toString() );
+        }
+        
+        
+        
+        
+        
+        
+        prop = new Prop( null, "Thomas", true, -1, null );
+        Assert.assertNotNull( "Versions toString was null", prop.toString() );
+        
+        prop.set( "Grand Lord Hellbringer", user1, date1 );
+        prop.set( "Master of the Creeping Darkness", user2, date2 );
+        prop.set( "Fell Marshall of the Undying Hordes", user3, date3 );
+        
+        names = prop.versions();
+        Assert.assertNotNull( "Versions were null", names );
+        Assert.assertEquals( "Wrong version count", 3, names.size() );
+        
+        Assert.assertEquals( "Wrong version value", "Thomas", names.get(0).value() );
+        Assert.assertEquals( "Wrong version value", "Grand Lord Hellbringer", names.get(1).value() );
+        Assert.assertEquals( "Wrong version value", "Master of the Creeping Darkness", names.get(2).value() );
+        
+        Assert.assertEquals( "Wrong user id", null, names.get(0).modifiedBy());
+        Assert.assertEquals( "Wrong user id", user1, names.get(1).modifiedBy() );
+        Assert.assertEquals( "Wrong user id", user2, names.get(2).modifiedBy() );
+
+        //we don't know what the timestamp for the first version (created by 
+        //the constructor)
+        Assert.assertEquals( "Wrong timestamp", date1, names.get(1).timestamp() );
+        Assert.assertEquals( "Wrong timestamp", date2, names.get(2).timestamp() );
+        
+        
+        
+        
+        prop.set( "Jimmy", date1 );
+        Assert.assertEquals( "Wrong timestamp", date1, prop.timestamp() );
+        Assert.assertNull( "Modified by should be null", prop.modifiedBy() );
+        Assert.assertNull( "Parent by should be null", prop.parent() );
+        Assert.assertNotNull( "Versions toString was null", prop.toString() );
+        
+        prop.set( "Jimmy", "", date1 );
+        Assert.assertEquals( "Wrong timestamp", date1, prop.timestamp() );
+        Assert.assertEquals( "Modified by incorrect", "", prop.modifiedBy() );
+        Assert.assertNull( "Parent by should be null", prop.parent() );
+        Assert.assertNotNull( "Versions toString was null", prop.toString() );
+        
+        prop.uuid( "12345" );
+        Assert.assertEquals( "Wrong uuid", "12345", prop.uuid() );
+        
+        prop.parent( "12345" );
+        Assert.assertEquals( "Wrong parent", "12345", prop.parent() );
     }
 }

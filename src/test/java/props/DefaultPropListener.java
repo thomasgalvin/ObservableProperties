@@ -1,5 +1,7 @@
 package props;
 
+import org.junit.Assert;
+
 public class DefaultPropListener implements PropListener
 {
     private int count;
@@ -11,6 +13,8 @@ public class DefaultPropListener implements PropListener
         
         current = event.value();
         previous = event.previousValue();
+        
+        Assert.assertNotNull( "Prop was null", event.property() );
     }
     
     public int count(){
